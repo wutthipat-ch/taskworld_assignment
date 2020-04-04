@@ -7,7 +7,7 @@
     "build": "npm run build-ts",
     "build-ts": "tsc",
     "clean": "rm -rf ./dist",
-    "lint": "eslint ./src/**",
+    "lint": "eslint ./src/**/*",
     "serve": "node dist/app.js",
     "start": "npm run serve",
     "test": "jest",
