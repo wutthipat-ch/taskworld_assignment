@@ -1,0 +1,29 @@
+{
+"parser": "@typescript-eslint/parser",
+"plugins": [
+  "@typescript-eslint",
+  "import"
+],
+"parserOptions": {
+  "ecmaVersion": 6,
+  "sourceType": "module",
+  "ecmaFeatures": {
+    "modules": true
+  },
+  "project": "./tsconfig.json"
+},
+"rules": {
+  "linebreak-style": 0
+},
+"extends": [
+  "airbnb-typescript/base",
+  "plugin:@typescript-eslint/eslint-recommended",
+  "plugin:@typescript-eslint/recommended",
+  "plugin:@typescript-eslint/recommended-requiring-type-checking"
+],
+"settings": {
+  "import/resolver": {
+    "typescript": {}
+  }
+}
+}
