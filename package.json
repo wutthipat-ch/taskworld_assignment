@@ -1,8 +1,8 @@
 {
   "name": "taskworld_assignment",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Assignment",
+  "main": "src/app.ts",
   "scripts": {
     "build": "npm run build-ts",
     "build-ts": "tsc",
