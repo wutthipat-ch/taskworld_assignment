@@ -6,8 +6,10 @@ export default abstract class Ship {
 
   protected state: ShipState;
 
-  constructor(position: Position) {
-    this.position = position;
+  static dbString = 'ship';
+
+  constructor(position?: Position) {
+    this.position = position || new Position(0, 0);
     this.state = ShipState.FLOAT;
   }
 

@@ -25,6 +25,17 @@ export default class Position {
     throw new Error('The coordination value must not be negative and over than 9');
   }
 
+  static fromDBString(dbString: string): Position {
+    const arrayString = dbString.trim().split(',');
+    const x = arrayString[0];
+    const y = arrayString[1];
+    return new Position(+x, +y);
+  }
+
+  toDBString(): string {
+    return `${this.getX()},${this.getY()}`;
+  }
+
   getX(): number {
     return this.x;
   }
