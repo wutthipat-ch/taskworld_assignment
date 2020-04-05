@@ -1,13 +1,13 @@
 import {
   Entity, PrimaryGeneratedColumn, Column, ValueTransformer,
 } from 'typeorm';
-import BattleShip from 'src/models/BattleShip';
-import Cruiser from 'src/models/Cruiser';
-import Destroyer from 'src/models/Destroyer';
-import Submarine from 'src/models/Submarine';
-import Ship from 'src/models/Ship';
-import ShipState from 'src/models/ShipState';
-import Position from 'src/models/Position';
+import BattleShip from '../models/BattleShip';
+import Cruiser from '../models/Cruiser';
+import Destroyer from '../models/Destroyer';
+import Submarine from '../models/Submarine';
+import Ship from '../models/Ship';
+import ShipState from '../models/ShipState';
+import Position from '../models/Position';
 
 const shipTypeTransformer: ValueTransformer = {
   from: (dbValue: string) => {
