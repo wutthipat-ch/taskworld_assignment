@@ -25,3 +25,16 @@ describe('Position model must validate the inputs correctly', () => {
     expect(position.getY()).toBe(8);
   });
 });
+describe('Method fromDBString must create the position instance correctly', () => {
+  test('when there is any white space surronding the string', () => {
+    const position = Position.fromDBString('  1,3 ');
+    expect(position.getX()).toBe(1);
+    expect(position.getY()).toBe(3);
+  });
+});
+describe('Method toDBString must create the string with expected format', () => {
+  test('when the position is valid', () => {
+    const position = new Position(0, 9);
+    expect(position.toDBString()).toBe('0,9');
+  });
+});
