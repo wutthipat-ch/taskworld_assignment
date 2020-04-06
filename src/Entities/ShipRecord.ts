@@ -8,17 +8,11 @@ import Submarine from '../models/Submarine';
 import Ship from '../models/Ship';
 import ShipState from '../models/ShipState';
 import Position from '../models/Position';
+import ShipUtil from '../utils/ShipUtil';
 
 const shipTypeTransformer: ValueTransformer = {
-  from: (dbValue: string) => {
-    switch (dbValue.toLowerCase()) {
-      case 'battleship': return new BattleShip();
-      case 'cruiser': return new Cruiser();
-      case 'destroyer': return new Destroyer();
-      case 'submarine': return new Submarine();
-      default: return null;
-    }
-  },
+  // eslint-disable-next-line @typescript-eslint/unbound-method
+  from: ShipUtil.getSpecificShipByShipTypeStr,
   to: (entityValue: Ship) => {
     if (entityValue instanceof BattleShip) return BattleShip.dbString;
     if (entityValue instanceof Cruiser) return Cruiser.dbString;
@@ -39,11 +33,19 @@ export default class ShipRecord {
   id!: number;
 
   @Column({ type: 'varchar', length: '20', transformer: shipTypeTransformer })
-  ship !: Ship;
+  'type' !: Ship;
 
   @Column({ type: 'enum', enum: ShipState, default: ShipState.FLOAT })
   state!: ShipState;
 
   @Column({ type: 'varchar', length: '20', transformer: positionTransformer })
   position!: Position;
+
+  static fromShipModel(ship: Ship): ShipRecord {
+    const shipRecord = new ShipRecord();
+    shipRecord.type = ship;
+    shipRecord.state = ship.getState();
+    shipRecord.position = ship.getPosition();
+    return shipRecord;
+  }
 }

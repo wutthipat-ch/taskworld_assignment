@@ -1,6 +1,6 @@
 enum ShipState {
-  FLOAT,
-  SUNK
+  FLOAT = 'FLOAT',
+  SUNK = 'SUNK'
 }
 
 export default ShipState;

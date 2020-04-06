@@ -53,4 +53,8 @@ export default class Position {
     if (!Position.isValidY(y)) Position.throwInvalidCoordinateError();
     this.y = y;
   }
+
+  isEqual(position: Position): boolean {
+    return this.x === position.getX() && this.y === position.getY();
+  }
 }

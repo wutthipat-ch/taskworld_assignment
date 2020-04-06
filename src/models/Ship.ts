@@ -13,8 +13,16 @@ export default abstract class Ship {
     this.state = ShipState.FLOAT;
   }
 
+  getPosition(): Position {
+    return this.position;
+  }
+
   setPosition(position: Position): void {
     this.position = position;
+  }
+
+  getState(): ShipState {
+    return this.state;
   }
 
   setState(state: ShipState): void {
