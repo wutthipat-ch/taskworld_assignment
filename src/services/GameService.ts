@@ -13,6 +13,7 @@ import AttackingLog from '../entities/AttackingLog';
 import AttackResult from '../models/AttackResult';
 import AttackResponse from '../models/AttackResponse';
 import GameState from '../models/GameState';
+import GameStatusResponse from '../models/GameStatusResponse';
 
 @injectable()
 export default class GameService {
@@ -86,5 +87,16 @@ export default class GameService {
       position, result: attackResult, gameState: GameState.PROCESS,
     });
     return attackResult;
+  }
+
+  async getGameStatus(): Promise<GameStatusResponse> {
+    const shipRecords = await this.shipRepository.find();
+    const gameStatus = await this.attackingLogRepo.findOne({ order: { id: 'DESC' } }).then((log) => {
+      if (log) return log.gameState;
+      return GameState.PROCESS;
+    });
+    return new GameStatusResponse(gameStatus, shipRecords
+      .map((shipRecord) => shipRecord.toShipModel())
+      .map((ship) => Object.assign(ship, { type: ShipUtil.getStringByTypeofShip(ship) })));
   }
 }

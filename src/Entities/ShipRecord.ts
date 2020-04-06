@@ -39,4 +39,11 @@ export default class ShipRecord {
     shipRecord.position = ship.getPosition();
     return shipRecord;
   }
+
+  toShipModel(): Ship {
+    const ship = this.type;
+    ship.setState(this.state);
+    ship.setPosition(this.position);
+    return ship;
+  }
 }

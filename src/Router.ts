@@ -13,6 +13,8 @@ export default class Router {
     app.post('/api/ships', (req, res) => Router.shipPlacementHandler(req, res, gameService));
     // attack endpoint
     app.post('/api/attack', (req, res) => Router.attackHandler(req, res, gameService));
+    // status endpoint
+    app.get('/api/status', (_, res) => Router.getGameStatus(res, gameService));
   }
 
   @Validator.validateRequestBody(ShipPlacementSchema)
@@ -28,5 +30,10 @@ export default class Router {
   @Validator.validateRequestBody(AttackSchema)
   static async attackHandler(req: Request, res: Response, gameService: GameService): Promise<void> {
     res.status(HttpStatus.CREATED).send({ message: await gameService.attack(req) });
+  }
+
+  static async getGameStatus(res: Response, gameService: GameService): Promise<void> {
+    const gameStatus = await gameService.getGameStatus();
+    res.status(HttpStatus.OK).send({ game_status: gameStatus.gameState, ships: gameStatus.ships });
   }
 }
