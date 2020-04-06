@@ -51,9 +51,19 @@ export default class GameService {
   }
 
   async isValidPosition(position: Position): Promise<boolean> {
+    const isConsecutiveSquare = (p1: Position, p2: Position): boolean => {
+      if (p1.getX() === p2.getX()) {
+        return p1.getY() === p2.getY() + 1 || p1.getY() === p2.getY() - 1;
+      }
+      if (p1.getY() === p2.getY()) {
+        return p1.getX() === p2.getX() + 1 || p1.getX() === p2.getX() - 1;
+      }
+      return false;
+    };
     const result = await this.shipRepository.find()
       .then((shipArr) => shipArr
-        .map((ship) => !ship.position.isEqual(position))
+        .map((ship) => !ship.position.isEqual(position)
+        && !isConsecutiveSquare(ship.position, position))
         .reduce((x, y) => x && y, true));
     return result;
   }

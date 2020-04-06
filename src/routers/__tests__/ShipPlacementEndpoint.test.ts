@@ -45,15 +45,15 @@ describe('Ship placment endpoint should work correctly in', () => {
     beforeAll(async () => {
       const shipRecords = [
         { type: new BattleShip(), state: ShipState.FLOAT, position: new Position(0, 0) },
-        { type: new Cruiser(), state: ShipState.FLOAT, position: new Position(1, 0) },
-        { type: new Destroyer(), state: ShipState.FLOAT, position: new Position(2, 0) },
-        { type: new Destroyer(), state: ShipState.FLOAT, position: new Position(3, 0) },
-        { type: new Destroyer(), state: ShipState.FLOAT, position: new Position(4, 0) },
-        { type: new Destroyer(), state: ShipState.FLOAT, position: new Position(5, 0) },
-        { type: new Submarine(), state: ShipState.FLOAT, position: new Position(6, 0) },
-        { type: new Submarine(), state: ShipState.FLOAT, position: new Position(7, 0) },
-        { type: new Submarine(), state: ShipState.FLOAT, position: new Position(8, 0) },
-        { type: new Submarine(), state: ShipState.FLOAT, position: new Position(9, 0) },
+        { type: new Cruiser(), state: ShipState.FLOAT, position: new Position(1, 1) },
+        { type: new Destroyer(), state: ShipState.FLOAT, position: new Position(2, 2) },
+        { type: new Destroyer(), state: ShipState.FLOAT, position: new Position(3, 3) },
+        { type: new Destroyer(), state: ShipState.FLOAT, position: new Position(4, 4) },
+        { type: new Destroyer(), state: ShipState.FLOAT, position: new Position(5, 5) },
+        { type: new Submarine(), state: ShipState.FLOAT, position: new Position(6, 6) },
+        { type: new Submarine(), state: ShipState.FLOAT, position: new Position(7, 7) },
+        { type: new Submarine(), state: ShipState.FLOAT, position: new Position(8, 8) },
+        { type: new Submarine(), state: ShipState.FLOAT, position: new Position(9, 9) },
       ];
       await connection.createQueryBuilder()
         .insert().into(ShipRecord).values(shipRecords)
@@ -85,7 +85,7 @@ describe('Ship placment endpoint should work correctly in', () => {
       done();
     });
   });
-  describe('ship position already exist', () => {
+  describe('ship position already exist or consecutive', () => {
     beforeAll(async () => {
       const shipRecords = [
         { type: new BattleShip(), state: ShipState.FLOAT, position: new Position(0, 0) },
@@ -99,8 +99,18 @@ describe('Ship placment endpoint should work correctly in', () => {
         .delete().from(ShipRecord)
         .execute();
     });
-    test('cannot created', async (done) => {
+    test('cannot created existed', async (done) => {
       const resp = await request(app).post(shipPlacementUri).send({ type: 'Submarine', position: { x: 0, y: 0 } });
+      expect(resp.status).toBe(HttpStatus.UNPROCESSABLE_ENTITY);
+      done();
+    });
+    it('cannot created consecutive x', async (done) => {
+      const resp = await request(app).post(shipPlacementUri).send({ type: 'Submarine', position: { x: 1, y: 0 } });
+      expect(resp.status).toBe(HttpStatus.UNPROCESSABLE_ENTITY);
+      done();
+    });
+    it('cannot created consecutive y', async (done) => {
+      const resp = await request(app).post(shipPlacementUri).send({ type: 'Submarine', position: { x: 0, y: 1 } });
       expect(resp.status).toBe(HttpStatus.UNPROCESSABLE_ENTITY);
       done();
     });

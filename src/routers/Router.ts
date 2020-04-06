@@ -16,7 +16,7 @@ export default class Router {
     // status endpoint
     app.get('/api/status', (_, res) => Router.getGameStatus(res, gameService));
     // new game endpoint
-    app.post('/api/newgame', (_, res) => Router.createNewGame(res, gameService));
+    app.post('/api/newgame', (_, res) => Router.createNewGameHandler(res, gameService));
   }
 
   @Validator.validateRequestBody(ShipPlacementSchema)
@@ -26,7 +26,7 @@ export default class Router {
     const generatedId = await gameService.placeShip(req);
     if (generatedId > 0) res.status(HttpStatus.CREATED).send({ id: generatedId });
     else if (generatedId === -1) res.status(HttpStatus.UNPROCESSABLE_ENTITY).send({ errorMsg: 'The number of ship is already full' });
-    else res.status(HttpStatus.UNPROCESSABLE_ENTITY).send({ errorMsg: 'The position of ship is already exist' });
+    else res.status(HttpStatus.UNPROCESSABLE_ENTITY).send({ errorMsg: 'The position of ship is already exist or consecutive square' });
   }
 
   @Validator.validateRequestBody(AttackSchema)
@@ -39,7 +39,7 @@ export default class Router {
     res.status(HttpStatus.OK).send({ game_status: gameStatus.gameState, ships: gameStatus.ships });
   }
 
-  static async createNewGame(res: Response, gameService: GameService): Promise<void> {
+  static async createNewGameHandler(res: Response, gameService: GameService): Promise<void> {
     await gameService.createNewGame();
     res.status(HttpStatus.CREATED).send({ message: 'New game created!' });
   }
