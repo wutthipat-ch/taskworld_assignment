@@ -1,5 +1,6 @@
 import { Request } from 'express';
 import { inject, injectable } from 'tsyringe';
+import { Repository } from 'typeorm';
 import ShipRecord from '../entities/ShipRecord';
 import Position from '../models/Position';
 import ShipRepository from '../repositories/ShipRepository';
@@ -8,13 +9,20 @@ import Cruiser from '../models/Cruiser';
 import BattleShip from '../models/BattleShip';
 import Destroyer from '../models/Destroyer';
 import Submarine from '../models/Submarine';
+import AttackingLog from '../entities/AttackingLog';
+import AttackResult from '../models/AttackResult';
+import AttackResponse from '../models/AttackResponse';
+import GameState from '../models/GameState';
 
 @injectable()
 export default class GameService {
   private shipRepository: ShipRepository;
 
-  constructor(@inject('ShipRepository') shipRepository: ShipRepository) {
+  private attackingLogRepo: Repository<AttackingLog>;
+
+  constructor(@inject('ShipRepository') shipRepository: ShipRepository, @inject('AttackingLogRepository') attackingLogRepo: Repository<AttackingLog>) {
     this.shipRepository = shipRepository;
+    this.attackingLogRepo = attackingLogRepo;
   }
 
   async placeShip(req: Request): Promise<number> {
@@ -47,5 +55,36 @@ export default class GameService {
         .map((ship) => !ship.position.isEqual(position))
         .reduce((x, y) => x && y, true));
     return result;
+  }
+
+  async attack(req: Request): Promise<string> {
+    const data = req.body;
+    const { x, y } = data.position;
+    const position = new Position(x as number, y as number);
+    const shipFindResult = await this.shipRepository.findOneByPosition(position);
+    const attackResult = shipFindResult ? AttackResult.HIT : AttackResult.MISS;
+    if (shipFindResult) {
+      await this.shipRepository.remove(shipFindResult);
+      if (await this.shipRepository.count() === 0) {
+        await this.attackingLogRepo.insert({
+          position, result: attackResult, gameState: GameState.WIN,
+        });
+        const numAttack = await this.attackingLogRepo.count();
+        return AttackResponse.WIN.replace('X', numAttack.toString(10));
+      }
+      // hit but not yet win
+      await this.attackingLogRepo.insert({
+        position, result: attackResult, gameState: GameState.PROCESS,
+      });
+      if (await this.shipRepository.countByShipType(shipFindResult) === 0) {
+        return AttackResponse.SANK.replace('X', ShipUtil.getStringByTypeofShip(shipFindResult.type));
+      }
+      return attackResult;
+    }
+    // miss
+    await this.attackingLogRepo.insert({
+      position, result: attackResult, gameState: GameState.PROCESS,
+    });
+    return attackResult;
   }
 }

@@ -1,10 +1,6 @@
 import {
   Entity, PrimaryGeneratedColumn, Column, ValueTransformer,
 } from 'typeorm';
-import BattleShip from '../models/BattleShip';
-import Cruiser from '../models/Cruiser';
-import Destroyer from '../models/Destroyer';
-import Submarine from '../models/Submarine';
 import Ship from '../models/Ship';
 import ShipState from '../models/ShipState';
 import Position from '../models/Position';
@@ -13,13 +9,8 @@ import ShipUtil from '../utils/ShipUtil';
 const shipTypeTransformer: ValueTransformer = {
   // eslint-disable-next-line @typescript-eslint/unbound-method
   from: ShipUtil.getSpecificShipByShipTypeStr,
-  to: (entityValue: Ship) => {
-    if (entityValue instanceof BattleShip) return BattleShip.dbString;
-    if (entityValue instanceof Cruiser) return Cruiser.dbString;
-    if (entityValue instanceof Destroyer) return Destroyer.dbString;
-    if (entityValue instanceof Submarine) return Submarine.dbString;
-    return Ship.dbString;
-  },
+  // eslint-disable-next-line @typescript-eslint/unbound-method
+  to: ShipUtil.getStringByTypeofShip,
 };
 
 const positionTransformer: ValueTransformer = {
