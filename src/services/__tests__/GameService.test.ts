@@ -6,11 +6,11 @@ import BattleShip from '../../models/BattleShip';
 import Cruiser from '../../models/Cruiser';
 import Destroyer from '../../models/Destroyer';
 import Submarine from '../../models/Submarine';
-import AttackingLog from '../../entities/AttackingLog';
+import AttackingLogRecord from '../../entities/AttackingLogRecord';
 
 describe('GameService must evaluate method correctly', () => {
   const shipRepository = new ShipRepository();
-  const attackingLogRepo = new Repository<AttackingLog>();
+  const attackingLogRepo = new Repository<AttackingLogRecord>();
   describe('Method isValidNumberShip', () => {
     test('BattleShip passed', () => {
       jest.spyOn(shipRepository, 'countByShipType').mockImplementation(() => Promise.resolve(0));

@@ -11,7 +11,7 @@ const positionTransformer: ValueTransformer = {
 };
 
 @Entity('attacking_logs')
-export default class AttackingLog {
+export default class AttackingLogRecord {
   @PrimaryGeneratedColumn()
   id!: number;
 

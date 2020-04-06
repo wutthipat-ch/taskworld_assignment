@@ -10,7 +10,7 @@ import ShipState from '../../models/ShipState';
 import Cruiser from '../../models/Cruiser';
 import Destroyer from '../../models/Destroyer';
 import Position from '../../models/Position';
-import AttackingLog from '../../entities/AttackingLog';
+import AttackingLogRecord from '../../entities/AttackingLogRecord';
 import AttackResult from '../../models/AttackResult';
 import GameState from '../../models/GameState';
 
@@ -38,7 +38,7 @@ describe('Create new game endpoint should work correctly in', () => {
       .execute();
     await connection.createQueryBuilder()
       .insert()
-      .into(AttackingLog)
+      .into(AttackingLogRecord)
       .values(logRecords)
       .execute();
   });
@@ -47,12 +47,12 @@ describe('Create new game endpoint should work correctly in', () => {
       .delete().from(ShipRecord)
       .execute();
     await connection.createQueryBuilder()
-      .delete().from(AttackingLog)
+      .delete().from(AttackingLogRecord)
       .execute();
   });
   test('create new game successfully', async (done) => {
     const resp = await request(app).post(createNewGameUri);
-    const logRecords = await connection.createQueryBuilder().select().from(AttackingLog, 'al').execute();
+    const logRecords = await connection.createQueryBuilder().select().from(AttackingLogRecord, 'al').execute();
     const shipRecords = await connection.createQueryBuilder().select().from(ShipRecord, 'sh').execute();
     expect(resp.status).toBe(HttpStatus.CREATED);
     expect(logRecords).toStrictEqual([]);

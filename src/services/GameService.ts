@@ -9,7 +9,7 @@ import Cruiser from '../models/Cruiser';
 import BattleShip from '../models/BattleShip';
 import Destroyer from '../models/Destroyer';
 import Submarine from '../models/Submarine';
-import AttackingLog from '../entities/AttackingLog';
+import AttackingLogRecord from '../entities/AttackingLogRecord';
 import AttackResult from '../models/AttackResult';
 import AttackResponse from '../models/AttackResponse';
 import GameState from '../models/GameState';
@@ -19,9 +19,9 @@ import GameStatusResponse from '../models/GameStatusResponse';
 export default class GameService {
   private shipRepository: ShipRepository;
 
-  private attackingLogRepo: Repository<AttackingLog>;
+  private attackingLogRepo: Repository<AttackingLogRecord>;
 
-  constructor(@inject('ShipRepository') shipRepository: ShipRepository, @inject('AttackingLogRepository') attackingLogRepo: Repository<AttackingLog>) {
+  constructor(@inject('ShipRepository') shipRepository: ShipRepository, @inject('AttackingLogRepository') attackingLogRepo: Repository<AttackingLogRecord>) {
     this.shipRepository = shipRepository;
     this.attackingLogRepo = attackingLogRepo;
   }

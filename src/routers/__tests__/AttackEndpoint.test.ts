@@ -10,7 +10,7 @@ import ShipState from '../../models/ShipState';
 import Cruiser from '../../models/Cruiser';
 import Destroyer from '../../models/Destroyer';
 import Position from '../../models/Position';
-import AttackingLog from '../../entities/AttackingLog';
+import AttackingLogRecord from '../../entities/AttackingLogRecord';
 import AttackResult from '../../models/AttackResult';
 import GameState from '../../models/GameState';
 
@@ -40,13 +40,13 @@ describe('Attack endpoint should work correctly in', () => {
         .delete().from(ShipRecord)
         .execute();
       await connection.createQueryBuilder()
-        .delete().from(AttackingLog)
+        .delete().from(AttackingLogRecord)
         .execute();
     });
     test('return miss message', async (done) => {
       const resp = await request(app).post(attackUri).send({ position: { x: 0, y: 0 } });
-      const log: AttackingLog[] = await connection.createQueryBuilder().select()
-        .from(AttackingLog, 'al')
+      const log: AttackingLogRecord[] = await connection.createQueryBuilder().select()
+        .from(AttackingLogRecord, 'al')
         .where({ result: AttackResult.MISS, gameState: GameState.PROCESS })
         .execute();
       expect(resp.status).toBe(HttpStatus.CREATED);
@@ -73,13 +73,13 @@ describe('Attack endpoint should work correctly in', () => {
         .delete().from(ShipRecord)
         .execute();
       await connection.createQueryBuilder()
-        .delete().from(AttackingLog)
+        .delete().from(AttackingLogRecord)
         .execute();
     });
     test('sink a ship', async (done) => {
       const resp = await request(app).post(attackUri).send({ position: { x: 2, y: 0 } });
-      const log: AttackingLog[] = await connection.createQueryBuilder().select()
-        .from(AttackingLog, 'al')
+      const log: AttackingLogRecord[] = await connection.createQueryBuilder().select()
+        .from(AttackingLogRecord, 'al')
         .where({
           result: AttackResult.HIT,
           gameState: GameState.PROCESS,
@@ -93,8 +93,8 @@ describe('Attack endpoint should work correctly in', () => {
     });
     it('sink a type of ship', async (done) => {
       const resp = await request(app).post(attackUri).send({ position: { x: 3, y: 0 } });
-      const log: AttackingLog[] = await connection.createQueryBuilder().select()
-        .from(AttackingLog, 'al')
+      const log: AttackingLogRecord[] = await connection.createQueryBuilder().select()
+        .from(AttackingLogRecord, 'al')
         .where({
           result: AttackResult.HIT,
           gameState: GameState.PROCESS,
@@ -108,8 +108,8 @@ describe('Attack endpoint should work correctly in', () => {
     });
     it('sink all ships win', async (done) => {
       const resp = await request(app).post(attackUri).send({ position: { x: 1, y: 0 } });
-      const log: AttackingLog[] = await connection.createQueryBuilder().select()
-        .from(AttackingLog, 'al')
+      const log: AttackingLogRecord[] = await connection.createQueryBuilder().select()
+        .from(AttackingLogRecord, 'al')
         .where({ result: AttackResult.HIT, gameState: GameState.WIN })
         .execute();
       expect(resp.status).toBe(HttpStatus.CREATED);

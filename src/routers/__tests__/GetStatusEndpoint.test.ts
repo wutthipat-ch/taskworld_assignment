@@ -10,7 +10,7 @@ import ShipState from '../../models/ShipState';
 import Cruiser from '../../models/Cruiser';
 import Destroyer from '../../models/Destroyer';
 import Position from '../../models/Position';
-import AttackingLog from '../../entities/AttackingLog';
+import AttackingLogRecord from '../../entities/AttackingLogRecord';
 import AttackResult from '../../models/AttackResult';
 import GameState from '../../models/GameState';
 
@@ -48,7 +48,7 @@ describe('Get status endpoint should work correctly in', () => {
         .execute();
       await connection.createQueryBuilder()
         .insert()
-        .into(AttackingLog)
+        .into(AttackingLogRecord)
         .values(logRecords)
         .execute();
     });
@@ -57,7 +57,7 @@ describe('Get status endpoint should work correctly in', () => {
         .delete().from(ShipRecord)
         .execute();
       await connection.createQueryBuilder()
-        .delete().from(AttackingLog)
+        .delete().from(AttackingLogRecord)
         .execute();
     });
     test('get process with three ships', async (done) => {
@@ -80,7 +80,7 @@ describe('Get status endpoint should work correctly in', () => {
       };
       await connection.createQueryBuilder()
         .insert()
-        .into(AttackingLog)
+        .into(AttackingLogRecord)
         .values(shipRecord)
         .execute();
       await connection.createQueryBuilder()
