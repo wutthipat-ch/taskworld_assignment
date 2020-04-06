@@ -1,10 +1,10 @@
 import { container } from 'tsyringe';
 import express, { Request, Response } from 'express';
 import HttpStatus from 'http-status-codes';
-import GameService from './services/GameService';
-import * as Validator from './decorators/validator';
-import ShipPlacementSchema from './schemas/shipPlacementSchema';
-import AttackSchema from './schemas/attackSchema';
+import GameService from '../services/GameService';
+import * as Validator from '../decorators/validator';
+import ShipPlacementSchema from '../schemas/shipPlacementSchema';
+import AttackSchema from '../schemas/attackSchema';
 
 export default class Router {
   static route(app: express.Express): void {
@@ -15,6 +15,8 @@ export default class Router {
     app.post('/api/attack', (req, res) => Router.attackHandler(req, res, gameService));
     // status endpoint
     app.get('/api/status', (_, res) => Router.getGameStatus(res, gameService));
+    // new game endpoint
+    app.post('/api/newgame', (_, res) => Router.createNewGame(res, gameService));
   }
 
   @Validator.validateRequestBody(ShipPlacementSchema)
@@ -35,5 +37,10 @@ export default class Router {
   static async getGameStatus(res: Response, gameService: GameService): Promise<void> {
     const gameStatus = await gameService.getGameStatus();
     res.status(HttpStatus.OK).send({ game_status: gameStatus.gameState, ships: gameStatus.ships });
+  }
+
+  static async createNewGame(res: Response, gameService: GameService): Promise<void> {
+    await gameService.createNewGame();
+    res.status(HttpStatus.CREATED).send({ message: 'New game created!' });
   }
 }

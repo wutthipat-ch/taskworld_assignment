@@ -99,4 +99,9 @@ export default class GameService {
       .map((shipRecord) => shipRecord.toShipModel())
       .map((ship) => Object.assign(ship, { type: ShipUtil.getStringByTypeofShip(ship) })));
   }
+
+  async createNewGame(): Promise<void> {
+    await this.shipRepository.clear();
+    await this.attackingLogRepo.clear();
+  }
 }

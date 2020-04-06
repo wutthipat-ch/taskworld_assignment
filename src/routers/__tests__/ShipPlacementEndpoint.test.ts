@@ -1,17 +1,17 @@
 import { Connection } from 'typeorm';
 import HttpStatus from 'http-status-codes';
 import request from 'supertest';
-import server from '../server';
-import database from '../database';
+import server from '../../server';
+import database from '../../database';
 import Router from '../Router';
-import ShipRecord from '../entities/ShipRecord';
-import testDatabaseOptions from '../configurations/testdatabase';
-import ShipState from '../models/ShipState';
-import BattleShip from '../models/BattleShip';
-import Cruiser from '../models/Cruiser';
-import Destroyer from '../models/Destroyer';
-import Submarine from '../models/Submarine';
-import Position from '../models/Position';
+import ShipRecord from '../../entities/ShipRecord';
+import testDatabaseOptions from '../../configurations/testdatabase';
+import ShipState from '../../models/ShipState';
+import BattleShip from '../../models/BattleShip';
+import Cruiser from '../../models/Cruiser';
+import Destroyer from '../../models/Destroyer';
+import Submarine from '../../models/Submarine';
+import Position from '../../models/Position';
 
 describe('Ship placment endpoint should work correctly in', () => {
   let connection: Connection;

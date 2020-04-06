@@ -2,7 +2,7 @@ import 'reflect-metadata';
 import server from './server';
 import databaseOptions from './configurations/database';
 import database from './database';
-import Router from './Router';
+import Router from './routers/Router';
 
 export default class Application {
   private app = server();
