@@ -1,3 +1,5 @@
+import _ from 'lodash';
+import { v1 as uuidv1 } from 'uuid';
 import { Connection } from 'typeorm';
 import HttpStatus from 'http-status-codes';
 import request from 'supertest';
@@ -8,11 +10,13 @@ import ShipRecord from '../../entities/ShipRecord';
 import testDatabaseOptions from '../../configurations/testdatabase';
 import ShipState from '../../models/ShipState';
 import Cruiser from '../../models/Cruiser';
-import Destroyer from '../../models/Destroyer';
 import Position from '../../models/Position';
 import AttackingLogRecord from '../../entities/AttackingLogRecord';
 import AttackResult from '../../models/AttackResult';
 import GameState from '../../models/GameState';
+import PlacementAxis from '../../models/PlacementAxis';
+import Ship from '../../models/Ship';
+
 
 describe('Create new game endpoint should work correctly in', () => {
   let connection: Connection;
@@ -21,15 +25,54 @@ describe('Create new game endpoint should work correctly in', () => {
   beforeAll(async () => {
     connection = await database(testDatabaseOptions);
     Router.route(app);
-    const shipRecords = [
-      { type: new Cruiser(), state: ShipState.FLOAT, position: new Position(1, 5) },
-      { type: new Destroyer(), state: ShipState.FLOAT, position: new Position(2, 6) },
-      { type: new Destroyer(), state: ShipState.FLOAT, position: new Position(3, 2) },
-    ];
+    function generateAllShipPosition(
+      headPosition: Position,
+      placementAxis: PlacementAxis,
+      ship: Ship,
+    ): Position[] {
+      const positions: Position[] = [];
+      for (let i = 0; i < ship.getShipSize(); i += 1) {
+        if (placementAxis === PlacementAxis.X) {
+          positions.push(new Position(headPosition.getX() + i, headPosition.getY()));
+        } else positions.push(new Position(headPosition.getX(), headPosition.getY() + i));
+      }
+      return positions;
+    }
+    let uuid = '';
+    let hitUUID = '';
+    const shipRecords = _.flatMap(
+      [
+        new Position(0, 2),
+        new Position(0, 4),
+      ], (position) => generateAllShipPosition(
+        position,
+        PlacementAxis.X,
+        new Cruiser(),
+      ),
+    )
+      .map((position, index) => {
+        uuid = index % 3 === 0 ? uuidv1() : uuid;
+        if (index === 3) hitUUID = uuid;
+        return {
+          type: new Cruiser(),
+          state: ShipState.FLOAT,
+          positionX: position.getX(),
+          positionY: position.getY(),
+          axis: PlacementAxis.X,
+          positionState: position.getState(),
+          shipId: uuid,
+        };
+      });
     const logRecords = [
       { position: new Position(0, 0), result: AttackResult.MISS, gameState: GameState.PROCESS },
       { position: new Position(0, 3), result: AttackResult.MISS, gameState: GameState.PROCESS },
-      { position: new Position(0, 4), result: AttackResult.MISS, gameState: GameState.PROCESS },
+      {
+        position: new Position(0, 4),
+        result: AttackResult.HIT,
+        gameState: GameState.PROCESS,
+        hitShipId: hitUUID,
+        hitShipType: new Cruiser(),
+      },
     ];
     await connection.createQueryBuilder()
       .insert()

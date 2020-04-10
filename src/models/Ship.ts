@@ -1,24 +1,31 @@
 import ShipState from './ShipState';
 import Position from './Position';
+import PlacementAxis from './PlacementAxis';
 
 export default abstract class Ship {
-  protected position: Position;
+  protected positions: Position[];
 
   protected state: ShipState;
 
-  static dbString = 'ship';
+  protected axis!: PlacementAxis;
 
-  constructor(position?: Position) {
-    this.position = position || new Position(0, 0);
+  constructor(positions?: Position[]) {
+    this.positions = positions || [];
     this.state = ShipState.FLOAT;
   }
 
-  getPosition(): Position {
-    return this.position;
+  abstract getString(): string;
+
+  abstract getShipSize(): number;
+
+  abstract getNumShip(): number;
+
+  getPositions(): Position[] {
+    return this.positions;
   }
 
-  setPosition(position: Position): void {
-    this.position = position;
+  setPositions(positions: Position[]): void {
+    this.positions = positions;
   }
 
   getState(): ShipState {
@@ -27,5 +34,13 @@ export default abstract class Ship {
 
   setState(state: ShipState): void {
     this.state = state;
+  }
+
+  getAxis(): PlacementAxis {
+    return this.axis;
+  }
+
+  setAxis(axis: PlacementAxis): void {
+    this.axis = axis;
   }
 }

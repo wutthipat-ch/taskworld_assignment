@@ -14,12 +14,4 @@ export default class ShipUtil {
       default: return new BattleShip();
     }
   }
-
-  static getStringByTypeofShip(ship: Ship): string {
-    if (ship instanceof BattleShip) return BattleShip.dbString;
-    if (ship instanceof Cruiser) return Cruiser.dbString;
-    if (ship instanceof Destroyer) return Destroyer.dbString;
-    if (ship instanceof Submarine) return Submarine.dbString;
-    return Ship.dbString;
-  }
 }

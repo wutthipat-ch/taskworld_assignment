@@ -4,9 +4,17 @@ import {
 import AttackResult from '../models/AttackResult';
 import Position from '../models/Position';
 import GameState from '../models/GameState';
+import Ship from '../models/Ship';
+import ShipUtil from '../utils/ShipUtil';
+
+const shipTypeTransformer: ValueTransformer = {
+  from: (str: string) => (str ? ShipUtil.getSpecificShipByShipTypeStr(str) : null),
+  to: (ship: Ship) => (ship ? ship.getString() : null),
+};
 
 const positionTransformer: ValueTransformer = {
-  from: (dbValue: string) => Position.fromDBString(dbValue),
+  // eslint-disable-next-line @typescript-eslint/unbound-method
+  from: Position.fromDBString,
   to: (entityValue: Position) => entityValue.toDBString(),
 };
 
@@ -28,4 +36,15 @@ export default class AttackingLogRecord {
     default: GameState.PROCESS,
   })
   gameState!: GameState;
+
+  @Column({ name: 'hit_ship_id', type: 'varchar', length: '50' })
+  hitShipId!: string;
+
+  @Column({
+    name: 'hit_ship_type',
+    type: 'varchar',
+    length: '20',
+    transformer: shipTypeTransformer,
+  })
+  hitShipType !: Ship;
 }

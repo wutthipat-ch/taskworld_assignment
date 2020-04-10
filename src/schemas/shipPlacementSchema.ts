@@ -8,4 +8,9 @@ export default Joi.object({
     .valid('battleship', 'cruiser', 'destroyer', 'submarine')
     .required(),
   position: positionSchema,
+  axis: Joi.string().label('Axis')
+    .trim()
+    .lowercase()
+    .valid('x', 'y')
+    .required(),
 });

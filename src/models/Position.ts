@@ -1,3 +1,5 @@
+import ShipPositionState from './ShipPositionState';
+
 export default class Position {
   static min = 0;
 
@@ -7,10 +9,15 @@ export default class Position {
 
   private y: number;
 
-  constructor(x: number, y: number) {
-    if (!Position.isValidX(x) || !Position.isValidY(y)) Position.throwInvalidCoordinateError();
+  private state: ShipPositionState;
+
+  constructor(x: number, y: number, bypassValidation?: boolean, state?: ShipPositionState) {
+    if (!bypassValidation && (!Position.isValidX(x) || !Position.isValidY(y))) {
+      Position.throwInvalidCoordinateError();
+    }
     this.x = x;
     this.y = y;
+    this.state = state || ShipPositionState.FINE;
   }
 
   static isValidX(x: number): boolean {
@@ -23,6 +30,10 @@ export default class Position {
 
   static throwInvalidCoordinateError(): void {
     throw new Error('The coordination value must not be negative and over than 9');
+  }
+
+  static uniqPositionFn(position: Position): string {
+    return `${position.getX()},${position.getY()}`;
   }
 
   static fromDBString(dbString: string): Position {
@@ -49,9 +60,17 @@ export default class Position {
     this.x = x;
   }
 
-  setY(y: number): void{
+  setY(y: number): void {
     if (!Position.isValidY(y)) Position.throwInvalidCoordinateError();
     this.y = y;
+  }
+
+  getState(): ShipPositionState {
+    return this.state;
+  }
+
+  setState(state: ShipPositionState): void {
+    this.state = state;
   }
 
   isEqual(position: Position): boolean {
