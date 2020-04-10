@@ -24,9 +24,9 @@ export default class Router {
     req: Request, res: Response, gameService: GameService,
   ): Promise<void> {
     const generatedId = await gameService.placeShip(req);
-    if (generatedId > 0) res.status(HttpStatus.CREATED).send({ id: generatedId });
+    if (generatedId > 0) res.status(HttpStatus.CREATED).send({ message: 'Created' });
     else if (generatedId === -1) res.status(HttpStatus.UNPROCESSABLE_ENTITY).send({ errorMsg: 'The number of ship is already full' });
-    else res.status(HttpStatus.UNPROCESSABLE_ENTITY).send({ errorMsg: 'The position of ship is already exist or consecutive square' });
+    else res.status(HttpStatus.UNPROCESSABLE_ENTITY).send({ errorMsg: 'The position of ship is already exist, consecutive square with other ships or out of board' });
   }
 
   @Validator.validateRequestBody(AttackSchema)

@@ -153,7 +153,7 @@ describe('Ship placment endpoint should work correctly in', () => {
         .delete().from(ShipRecord)
         .execute();
     });
-    test.only('BattleShip', async (done) => {
+    test('BattleShip', async (done) => {
       const resp = await request(app).post(shipPlacementUri).send({ type: 'BattleShip', position: { x: 9, y: 0 }, axis: 'y' });
       expect(resp.status).toBe(HttpStatus.UNPROCESSABLE_ENTITY);
       expect(resp.body).toStrictEqual({ errorMsg: 'The number of ship is already full' });

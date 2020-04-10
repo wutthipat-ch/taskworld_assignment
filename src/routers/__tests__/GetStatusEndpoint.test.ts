@@ -9,7 +9,6 @@ import Router from '../Router';
 import ShipRecord from '../../entities/ShipRecord';
 import testDatabaseOptions from '../../configurations/testdatabase';
 import ShipState from '../../models/ShipState';
-import Cruiser from '../../models/Cruiser';
 import Destroyer from '../../models/Destroyer';
 import Position from '../../models/Position';
 import AttackingLogRecord from '../../entities/AttackingLogRecord';
