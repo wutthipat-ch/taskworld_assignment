@@ -4,6 +4,8 @@ CREATE TABLE `taskworld`.`attacking_logs` (
   `position` VARCHAR(20) CHARACTER SET 'utf8' NOT NULL,
   `result` VARCHAR(20) CHARACTER SET 'utf8' NOT NULL,
   `game_state` VARCHAR(20) CHARACTER SET 'utf8' NOT NULL DEFAULT 'PROCESS',
+  `hit_ship_id` VARCHAR(50) CHARACTER SET 'utf8',
+  `hit_ship_type` VARCHAR(20) CHARACTER SET 'utf8',
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE);
 
@@ -26,6 +28,8 @@ CREATE TABLE `test`.`attacking_logs` (
   `position` VARCHAR(20) CHARACTER SET 'utf8' NOT NULL,
   `result` VARCHAR(20) CHARACTER SET 'utf8' NOT NULL,
   `game_state` VARCHAR(20) CHARACTER SET 'utf8' NOT NULL DEFAULT 'PROCESS',
+  `hit_ship_id` VARCHAR(50) CHARACTER SET 'utf8',
+  `hit_ship_type` VARCHAR(20) CHARACTER SET 'utf8',
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE);
 
